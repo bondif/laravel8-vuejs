@@ -20,4 +20,16 @@ class ProductRepository
 
         return $createdProduct;
     }
+
+    public function delete(Product $product): bool
+    {
+        $result = false;
+
+        DB::transaction(function () use (&$result, $product) {
+            $product->categories()->detach();
+            $result = Product::destroy($product->getKey());
+        });
+
+        return $result;
+    }
 }

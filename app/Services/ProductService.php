@@ -31,4 +31,12 @@ class ProductService
 
         return $this->repository->save($product, ...$categoryIds);
     }
+
+    public function destroy($id)
+    {
+        $product = new Product();
+        $product->id = $id;
+
+        return $this->repository->delete($product);
+    }
 }
