@@ -2,6 +2,12 @@
     <div>
         <h1>Products</h1>
 
+        <p>Filter by category : </p>
+        <select name="categories" id="categories" @change="onCategoryFilterChange($event)" v-model="key">
+            <option value="" selected>---------</option>
+            <option :value="category.id" v-for="category in categories">{{ category.name }}</option>
+        </select>
+
         <div class="loading" v-if="loading">
             Loading...
         </div>
@@ -10,7 +16,7 @@
             {{ error }}
         </div>
 
-        <div v-if="products">
+        <div v-if="products && !loading">
             <table class="table">
                 <thead>
                 <tr>
@@ -47,6 +53,7 @@
                 products: null,
                 categories: null,
                 error: null,
+                key: null
             };
         },
         created() {
@@ -58,6 +65,21 @@
                 this.loading = true;
                 axios
                     .get('/api/products')
+                    .then(response => {
+                        this.loading = false;
+                        this.products = response.data.data;
+                    });
+
+                axios
+                    .get('/api/categories')
+                    .then(response => {
+                        this.categories = response.data.data;
+                    });
+            },
+            onCategoryFilterChange() {
+                this.loading = true
+                axios
+                    .get('/api/products?category=' + this.key)
                     .then(response => {
                         this.loading = false;
                         this.products = response.data.data;

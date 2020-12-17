@@ -5,6 +5,7 @@ namespace App\Repository;
 
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class ProductRepository
@@ -12,6 +13,14 @@ class ProductRepository
     public function all()
     {
         return Product::all();
+    }
+
+    public function allByCategory($categoryId)
+    {
+        return Product::query()
+            ->whereHas('categories', function (Builder $query) use ($categoryId) {
+                $query->where('categories.id', $categoryId);
+            })->get();
     }
 
     public function save(Product $product, ...$categoryIds): Product

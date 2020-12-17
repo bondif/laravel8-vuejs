@@ -15,6 +15,11 @@ class CategoryService
         $this->repository = $repository;
     }
 
+    public function all()
+    {
+        return $this->repository->all();
+    }
+
     public function store(string $name, int $parentId = null)
     {
         $category = new Category();

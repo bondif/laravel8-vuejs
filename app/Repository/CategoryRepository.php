@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryRepository
 {
+    public function all()
+    {
+        return Category::all();
+    }
+
     public function save(Category $category): Category
     {
         return Category::create($category->toArray());
