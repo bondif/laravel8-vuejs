@@ -10,17 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class ProductRepository
 {
-    public function all()
-    {
-        return Product::all();
-    }
-
-    public function allByCategory($categoryId)
+    public function all($categoryId = null, $orderByColumn = null)
     {
         return Product::query()
-            ->whereHas('categories', function (Builder $query) use ($categoryId) {
-                $query->where('categories.id', $categoryId);
-            })->get();
+            ->when($categoryId, function (Builder $query) use ($categoryId) {
+                $query->whereHas('categories', function (Builder $query) use ($categoryId) {
+                    $query->where('categories.id', $categoryId);
+                });
+            })
+            ->when($orderByColumn, function (Builder $query) use ($orderByColumn) {
+                $query->orderBy($orderByColumn);
+            })
+            ->get();
     }
 
     public function save(Product $product, ...$categoryIds): Product

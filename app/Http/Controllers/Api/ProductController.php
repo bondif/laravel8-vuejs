@@ -18,12 +18,10 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->has('category') && $request->get('category') !== null) {
-            $category = $request->get('category');
-            return new ProductCollection($this->productService->allByCategory($category));
-        }
+        $column = $request->get('sortBy');
+        $category = $request->get('category');
 
-        return new ProductCollection($this->productService->all());
+        return new ProductCollection($this->productService->all($category, $column));
     }
 
 

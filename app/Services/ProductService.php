@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\CannotSortWithColumnException;
 use App\Exceptions\MaxCategoriesExceededException;
 use App\Models\Product;
 use App\Repository\ProductRepository;
@@ -12,19 +13,23 @@ class ProductService
 
     private const MAX_CATEGORIES = 2;
 
+    private $sortByColumns = [
+        'name',
+        'price'
+    ];
+
     public function __construct(ProductRepository $repository)
     {
         $this->repository = $repository;
     }
 
-    public function all()
+    public function all($category = null, $sortBy = null)
     {
-        return $this->repository->all();
-    }
+        if ($sortBy && !in_array($sortBy, $this->sortByColumns)) {
+            throw new CannotSortWithColumnException();
+        }
 
-    public function allByCategory($categoryId)
-    {
-        return $this->repository->allByCategory($categoryId);
+        return $this->repository->all($category, $sortBy);
     }
 
     public function store(string $name, string $description, $price, string $image, ...$categoryIds)

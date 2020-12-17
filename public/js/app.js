@@ -1981,6 +1981,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1989,7 +2004,8 @@ __webpack_require__.r(__webpack_exports__);
       products: null,
       categories: null,
       error: null,
-      key: null
+      selectedCategory: '',
+      selectedColumn: ''
     };
   },
   created: function created() {
@@ -2015,11 +2031,12 @@ __webpack_require__.r(__webpack_exports__);
         _this.error = error.response.data.message || error.message;
       });
     },
-    onCategoryFilterChange: function onCategoryFilterChange() {
+    onChange: function onChange() {
       var _this2 = this;
 
+      this.error = null;
       this.loading = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products?category=' + this.key).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products?category=' + this.selectedCategory + '&sortBy=' + this.selectedColumn).then(function (response) {
         _this2.loading = false;
         _this2.products = response.data.data;
       })["catch"](function (error) {
@@ -2582,54 +2599,106 @@ var render = function() {
   return _c("div", [
     _c("h1", [_vm._v("Products")]),
     _vm._v(" "),
-    _c("p", [_vm._v("Filter by category : ")]),
-    _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.key,
-            expression: "key"
-          }
-        ],
-        attrs: { name: "categories", id: "categories" },
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.key = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col" }, [
+          _vm._v("\n                Filter by category :\n                "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedCategory,
+                  expression: "selectedCategory"
+                }
+              ],
+              attrs: { name: "categories", id: "categories" },
+              on: {
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.selectedCategory = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  },
+                  function($event) {
+                    return _vm.onChange($event)
+                  }
+                ]
+              }
             },
-            function($event) {
-              return _vm.onCategoryFilterChange($event)
-            }
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "", selected: "" } }, [
-          _vm._v("---------")
+            [
+              _c("option", { attrs: { value: "", selected: "" } }, [
+                _vm._v("---------")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.categories, function(category) {
+                return _c("option", { domProps: { value: category.id } }, [
+                  _vm._v(_vm._s(category.name))
+                ])
+              })
+            ],
+            2
+          )
         ]),
         _vm._v(" "),
-        _vm._l(_vm.categories, function(category) {
-          return _c("option", { domProps: { value: category.id } }, [
-            _vm._v(_vm._s(category.name))
-          ])
-        })
-      ],
-      2
-    ),
+        _c("div", { staticClass: "col" }, [
+          _vm._v("\n                Sort by :\n                "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedColumn,
+                  expression: "selectedColumn"
+                }
+              ],
+              attrs: { name: "sort", id: "sort" },
+              on: {
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.selectedColumn = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  },
+                  function($event) {
+                    return _vm.onChange($event)
+                  }
+                ]
+              }
+            },
+            [
+              _c("option", { attrs: { value: "", selected: "" } }, [
+                _vm._v("---------")
+              ]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "name" } }, [_vm._v("Name")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "price" } }, [_vm._v("Price")])
+            ]
+          )
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _vm.loading
       ? _c("div", { staticClass: "loading" }, [
@@ -2638,7 +2707,7 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _vm.error
-      ? _c("div", { staticClass: "error" }, [
+      ? _c("div", { staticClass: "danger" }, [
           _vm._v("\n        " + _vm._s(_vm.error) + "\n    ")
         ])
       : _vm._e(),

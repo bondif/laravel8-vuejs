@@ -2,17 +2,32 @@
     <div>
         <h1>Products</h1>
 
-        <p>Filter by category : </p>
-        <select name="categories" id="categories" @change="onCategoryFilterChange($event)" v-model="key">
-            <option value="" selected>---------</option>
-            <option :value="category.id" v-for="category in categories">{{ category.name }}</option>
-        </select>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Filter by category :
+                    <select name="categories" id="categories" @change="onChange($event)" v-model="selectedCategory">
+                        <option value="" selected>---------</option>
+                        <option :value="category.id" v-for="category in categories">{{ category.name }}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    Sort by :
+                    <select name="sort" id="sort" @change="onChange($event)" v-model="selectedColumn">
+                        <option value="" selected>---------</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
 
         <div class="loading" v-if="loading">
             Loading...
         </div>
 
-        <div v-if="error" class="error">
+        <div v-if="error" class="danger">
             {{ error }}
         </div>
 
@@ -53,7 +68,8 @@
                 products: null,
                 categories: null,
                 error: null,
-                key: null
+                selectedCategory: '',
+                selectedColumn: ''
             };
         },
         created() {
@@ -84,10 +100,11 @@
                         this.error = error.response.data.message || error.message;
                     });
             },
-            onCategoryFilterChange() {
+            onChange() {
+                this.error = null;
                 this.loading = true
                 axios
-                    .get('/api/products?category=' + this.key)
+                    .get('/api/products?category=' + this.selectedCategory + '&sortBy=' + this.selectedColumn)
                     .then(response => {
                         this.loading = false;
                         this.products = response.data.data;
@@ -96,7 +113,7 @@
                         this.loading = false;
                         this.error = error.response.data.message || error.message;
                     });
-            }
+            },
         }
     }
 </script>
