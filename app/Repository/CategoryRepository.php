@@ -5,6 +5,7 @@ namespace App\Repository;
 
 
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class CategoryRepository
 {
@@ -15,6 +16,13 @@ class CategoryRepository
 
     public function delete(Category $category): bool
     {
-        return Category::destroy($category->getKey());
+        $result = false;
+
+        DB::transaction(function () use (&$result, $category) {
+            $category->products()->detach();
+            $result = Category::destroy($category->getKey());
+        });
+
+        return $result;
     }
 }
