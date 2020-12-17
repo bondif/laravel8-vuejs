@@ -2004,9 +2004,15 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products').then(function (response) {
         _this.loading = false;
         _this.products = response.data.data;
+      })["catch"](function (error) {
+        _this.loading = false;
+        _this.error = error.response.data.message || error.message;
       });
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/categories').then(function (response) {
         _this.categories = response.data.data;
+      })["catch"](function (error) {
+        _this.loading = false;
+        _this.error = error.response.data.message || error.message;
       });
     },
     onCategoryFilterChange: function onCategoryFilterChange() {
@@ -2016,6 +2022,9 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products?category=' + this.key).then(function (response) {
         _this2.loading = false;
         _this2.products = response.data.data;
+      })["catch"](function (error) {
+        _this2.loading = false;
+        _this2.error = error.response.data.message || error.message;
       });
     }
   }

@@ -68,12 +68,20 @@
                     .then(response => {
                         this.loading = false;
                         this.products = response.data.data;
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        this.error = error.response.data.message || error.message;
                     });
 
                 axios
                     .get('/api/categories')
                     .then(response => {
                         this.categories = response.data.data;
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        this.error = error.response.data.message || error.message;
                     });
             },
             onCategoryFilterChange() {
@@ -83,6 +91,10 @@
                     .then(response => {
                         this.loading = false;
                         this.products = response.data.data;
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        this.error = error.response.data.message || error.message;
                     });
             }
         }
