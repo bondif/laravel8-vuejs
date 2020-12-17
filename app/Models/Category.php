@@ -18,4 +18,11 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
+
+    public function isParent(): bool
+    {
+        return Category::query()
+            ->where('parent_id', $this->getKey())
+            ->exists();
+    }
 }

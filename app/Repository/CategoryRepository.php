@@ -12,4 +12,9 @@ class CategoryRepository
     {
         return Category::create($category->toArray());
     }
+
+    public function delete(Category $category): bool
+    {
+        return Category::destroy($category->getKey());
+    }
 }

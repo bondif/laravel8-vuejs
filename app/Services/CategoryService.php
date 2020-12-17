@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\CannotDeleteParentCategoryException;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
 
@@ -21,5 +22,17 @@ class CategoryService
         $category->parent_id = $parentId;
 
         return $this->repository->save($category);
+    }
+
+    public function destroy($id)
+    {
+        $category = new Category();
+        $category->id = $id;
+
+        if ($category->isParent()) {
+            throw new CannotDeleteParentCategoryException();
+        }
+
+        return $this->repository->delete($category);
     }
 }
