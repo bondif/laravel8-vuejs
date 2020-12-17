@@ -17,6 +17,11 @@ class ProductService
         $this->repository = $repository;
     }
 
+    public function all()
+    {
+        return $this->repository->all();
+    }
+
     public function store(string $name, string $description, $price, string $image, ...$categoryIds)
     {
         $product = new Product();

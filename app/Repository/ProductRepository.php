@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class ProductRepository
 {
+    public function all()
+    {
+        return Product::all();
+    }
+
     public function save(Product $product, ...$categoryIds): Product
     {
         $createdProduct = null;

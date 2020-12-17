@@ -20,4 +20,13 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function getCategoriesStrAttribute()
+    {
+        return $this->categories()->get(['name'])
+            ->map(function ($category) {
+                return $category->name;
+            })
+            ->implode(', ');
+    }
 }
