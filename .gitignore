@@ -4,6 +4,8 @@
 /storage/*.key
 /vendor
 /.idea
+/public/images/*
+!public/images/.gitkeep
 .env
 .env.backup
 .phpunit.result.cache

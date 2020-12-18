@@ -2,6 +2,8 @@
     <div>
         <h1>Products</h1>
 
+        <router-link :to="{ name: 'products.create' }" class="btn btn-primary" role="button">Add</router-link>
+
         <div class="container">
             <div class="row">
                 <div class="col">

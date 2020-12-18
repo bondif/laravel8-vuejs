@@ -6,9 +6,12 @@ use App\Exceptions\CannotSortWithColumnException;
 use App\Exceptions\MaxCategoriesExceededException;
 use App\Models\Product;
 use App\Repository\ProductRepository;
+use App\Traits\FileUploader;
 
 class ProductService
 {
+    use FileUploader;
+
     private $repository;
 
     private const MAX_CATEGORIES = 2;
@@ -32,13 +35,13 @@ class ProductService
         return $this->repository->all($category, $sortBy);
     }
 
-    public function store(string $name, string $description, $price, string $image, ...$categoryIds)
+    public function store(string $name, string $description, $price, $image, ...$categoryIds)
     {
         $product = new Product();
         $product->name = $name;
         $product->description = $description;
         $product->price = $price;
-        $product->image = $image;
+        $product->image = $this->uploadBase64($image);
 
         if (count($categoryIds) > self::MAX_CATEGORIES) {
             throw new MaxCategoriesExceededException();
