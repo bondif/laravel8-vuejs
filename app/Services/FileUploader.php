@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Traits;
+namespace App\Services;
 
 
 use Carbon\Carbon;
 use Intervention\Image\Facades\Image;
 
-trait FileUploader
+class FileUploader
 {
     public function uploadBase64($file): string
     {

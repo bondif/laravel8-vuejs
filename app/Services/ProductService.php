@@ -6,13 +6,12 @@ use App\Exceptions\CannotSortWithColumnException;
 use App\Exceptions\MaxCategoriesExceededException;
 use App\Models\Product;
 use App\Repository\ProductRepository;
-use App\Traits\FileUploader;
 
 class ProductService
 {
-    use FileUploader;
-
     private $repository;
+
+    private $fileUploader;
 
     private const MAX_CATEGORIES = 2;
 
@@ -21,9 +20,10 @@ class ProductService
         'price'
     ];
 
-    public function __construct(ProductRepository $repository)
+    public function __construct(ProductRepository $repository, FileUploader $fileUploader)
     {
         $this->repository = $repository;
+        $this->fileUploader = $fileUploader;
     }
 
     public function all($category = null, $sortBy = null)
@@ -41,7 +41,7 @@ class ProductService
         $product->name = $name;
         $product->description = $description;
         $product->price = $price;
-        $product->image = $this->uploadBase64($image);
+        $product->image = $this->fileUploader->uploadBase64($image);
 
         if (count($categoryIds) > self::MAX_CATEGORIES) {
             throw new MaxCategoriesExceededException();
