@@ -51,7 +51,7 @@
                     <td>{{ product.name }}</td>
                     <td>{{ product.description }}</td>
                     <td>{{ product.price }}</td>
-                    <td>{{ product.image }}</td>
+                    <td><img :src="product.image" :alt="product.name" width="50"></td>
                     <td>{{ product.categoriesStr }}</td>
                 </tr>
                 </tbody>
