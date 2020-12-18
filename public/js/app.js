@@ -1936,6 +1936,17 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1980,21 +1991,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_1___default.a
+  },
   data: function data() {
     return {
       error: null,
       errors: null,
+      categories: null,
       product: {
         name: '',
         description: '',
         price: '',
-        image: ''
+        image: '',
+        categoryIds: []
       }
     };
   },
-  created: function created() {},
+  created: function created() {
+    this.getCategories();
+  },
   methods: {
+    getCategories: function getCategories() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/categories').then(function (response) {
+        _this.categories = response.data.data;
+      })["catch"](function (error) {
+        var _error$response;
+
+        _this.loading = false;
+        _this.error = ((_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.data.message) || error.message;
+      });
+    },
     onImageChange: function onImageChange(e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
@@ -2011,19 +2042,29 @@ __webpack_require__.r(__webpack_exports__);
       reader.readAsDataURL(file);
     },
     onSubmit: function onSubmit() {
-      var _this = this;
+      var _this2 = this;
 
       this.error = null;
       this.errors = null;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/products', this.product).then(function (response) {
-        console.log(response);
+        _this2.$router.push({
+          name: 'products.index'
+        });
       })["catch"](function (error) {
-        _this.error = error.response.data.message || error.message;
+        _this2.error = error.response.data.message || error.message;
 
         if (error.response.data.errors) {
-          _this.errors = error.response.data.errors;
+          _this2.errors = error.response.data.errors;
         }
       });
+    },
+    addTag: function addTag(newTag) {
+      var tag = {
+        name: newTag,
+        id: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+      };
+      this.categories.push(tag);
+      this.product.categoryIds.push(tag);
     }
   }
 });
@@ -2708,13 +2749,7 @@ var render = function() {
     _vm._v(" "),
     _vm.error
       ? _c("div", { staticClass: "danger" }, [
-          _vm._v(
-            "\n        " +
-              _vm._s(_vm.error) +
-              "\n        " +
-              _vm._s(_vm.errors) +
-              "\n    "
-          )
+          _vm._v("\n        " + _vm._s(_vm.error) + "\n    ")
         ])
       : _vm._e(),
     _vm._v(" "),
@@ -2862,6 +2897,68 @@ var render = function() {
                 _vm._v(
                   "\n                " +
                     _vm._s(_vm.errors.image[0]) +
+                    "\n            "
+                )
+              ])
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-3" }, [
+          _c(
+            "label",
+            { staticClass: "form-label", attrs: { for: "categories" } },
+            [_vm._v("Categories")]
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.product.categoryIds,
+                  expression: "product.categoryIds"
+                }
+              ],
+              attrs: { name: "categories", id: "categories", multiple: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.product,
+                    "categoryIds",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "", selected: "" } }, [
+                _vm._v("---------")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.categories, function(category) {
+                return _c("option", { domProps: { value: category.id } }, [
+                  _vm._v(_vm._s(category.name))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm.errors && _vm.errors.categoryIds
+            ? _c("div", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.errors.categoryIds[0]) +
                     "\n            "
                 )
               ])
@@ -3045,7 +3142,15 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(product.price))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(product.image))]),
+                    _c("td", [
+                      _c("img", {
+                        attrs: {
+                          src: product.image,
+                          alt: product.name,
+                          width: "50"
+                        }
+                      })
+                    ]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(product.categoriesStr))])
                   ])
@@ -3196,6 +3301,17 @@ function normalizeComponent (
   }
 }
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-multiselect/dist/vue-multiselect.min.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\next-media-challenge\\node_modules\\vue-multiselect\\dist\\vue-multiselect.min.js'");
 
 /***/ }),
 

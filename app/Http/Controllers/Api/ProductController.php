@@ -33,7 +33,7 @@ class ProductController extends Controller
         $description = $request->get('description');
         $price = $request->get('price');
         $image = $request->get('image');
-        $categoryIds = [];
+        $categoryIds = $request->get('categoryIds');
 
         return new Product($this->productService->store($name, $description, $price, $image, ...$categoryIds));
     }

@@ -4,7 +4,6 @@
 
         <div class="danger" v-if="error">
             {{ error }}
-            {{ errors }}
         </div>
 
         <form @submit.prevent="onSubmit($event)" enctype="multipart/form-data">
@@ -36,6 +35,16 @@
                     {{ errors.image[0] }}
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="categories" class="form-label">Categories</label>
+                <select name="categories" id="categories" v-model="product.categoryIds" multiple>
+                    <option value="" selected>---------</option>
+                    <option :value="category.id" v-for="category in categories">{{ category.name }}</option>
+                </select>
+                <div class="text-danger" v-if="errors && errors.categoryIds">
+                    {{ errors.categoryIds[0] }}
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
@@ -43,23 +52,39 @@
 
 <script>
     import axios from 'axios';
+    import Multiselect from 'vue-multiselect';
 
     export default {
+        components: {Multiselect},
         data() {
             return {
                 error: null,
                 errors: null,
+                categories: null,
                 product: {
                     name: '',
                     description: '',
                     price: '',
                     image: '',
+                    categoryIds: [],
                 }
             };
         },
         created() {
+            this.getCategories();
         },
         methods: {
+            getCategories() {
+                axios
+                    .get('/api/categories')
+                    .then(response => {
+                        this.categories = response.data.data;
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        this.error = error.response?.data.message || error.message;
+                    });
+            },
             onImageChange(e) {
                 let files = e.target.files || e.dataTransfer.files;
                 if (!files.length)
@@ -80,7 +105,7 @@
                 axios
                     .post('/api/products', this.product)
                     .then(response => {
-                        console.log(response);
+                        this.$router.push({ name: 'products.index' });
                     })
                     .catch(error => {
                         this.error = error.response.data.message || error.message;
@@ -88,6 +113,14 @@
                             this.errors = error.response.data.errors;
                         }
                     });
+            },
+            addTag(newTag) {
+                const tag = {
+                    name: newTag,
+                    id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                }
+                this.categories.push(tag)
+                this.product.categoryIds.push(tag)
             }
         }
     }
