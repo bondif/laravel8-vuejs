@@ -7,6 +7,7 @@ use App\Exceptions\Category\MaxCategoriesExceededException;
 use App\Models\Product\Product;
 use App\Repository\Product\ProductRepository;
 use App\Services\FileUploader;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
@@ -27,7 +28,7 @@ class ProductService
         $this->fileUploader = $fileUploader;
     }
 
-    public function all($category = null, $sortBy = null)
+    public function all($category = null, $sortBy = null): Collection
     {
         if ($sortBy && !in_array($sortBy, $this->sortByColumns)) {
             throw new CannotSortWithColumnException();
@@ -36,26 +37,19 @@ class ProductService
         return $this->repository->all($category, $sortBy);
     }
 
-    public function store(string $name, string $description, $price, $image, ...$categoryIds)
+    public function store(string $name, string $description, float $price, $image, ...$categoryIds): Product
     {
-        $product = new Product();
-        $product->name = $name;
-        $product->description = $description;
-        $product->price = $price;
-        $product->image = $this->fileUploader->uploadBase64($image);
-
         if (count($categoryIds) > self::MAX_CATEGORIES) {
             throw new MaxCategoriesExceededException();
         }
 
-        return $this->repository->save($product, ...$categoryIds);
+        $image = $this->fileUploader->uploadBase64($image);
+
+        return $this->repository->save($name, $description, $price, $image, ...$categoryIds);
     }
 
-    public function destroy($id)
+    public function destroy(int $productId): bool
     {
-        $product = new Product();
-        $product->id = $id;
-
-        return $this->repository->delete($product);
+        return $this->repository->delete($productId);
     }
 }
