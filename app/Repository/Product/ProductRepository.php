@@ -47,4 +47,16 @@ class ProductRepository
 
         return $result;
     }
+
+    public function getCategoriesAsString(int $productId): string
+    {
+        return Product::query()
+            ->findOrFail($productId)
+            ->categories()
+            ->get(['name'])
+            ->map(function ($category) {
+                return $category->name;
+            })
+            ->implode(', ');
+    }
 }
