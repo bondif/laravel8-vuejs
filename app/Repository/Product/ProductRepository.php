@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Repository;
+namespace App\Repository\Product;
 
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 

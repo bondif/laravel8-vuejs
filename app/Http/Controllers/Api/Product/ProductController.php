@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Resources\Product;
-use App\Http\Resources\ProductCollection;
-use App\Services\ProductService;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Resources\Product\Product as ProductResource;
+use App\Http\Resources\Product\ProductCollection;
+use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -35,6 +35,6 @@ class ProductController extends Controller
         $image = $request->get('image');
         $categoryIds = $request->get('categoryIds');
 
-        return new Product($this->productService->store($name, $description, $price, $image, ...$categoryIds));
+        return new ProductResource($this->productService->store($name, $description, $price, $image, ...$categoryIds));
     }
 }

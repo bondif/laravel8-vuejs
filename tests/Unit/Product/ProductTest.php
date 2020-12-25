@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit\Product;
 
-use App\Exceptions\MaxCategoriesExceededException;
-use App\Models\Category;
+use App\Exceptions\Category\MaxCategoriesExceededException;
+use App\Models\Category\Category;
 use App\Services\FileUploader;
+use App\Services\Product\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Mockery\MockInterface;
@@ -27,7 +28,7 @@ class ProductTest extends TestCase
                 $mock->shouldReceive('uploadBase64')->once()->andReturn($this->testImage);
             })
         );
-        $this->productService = $this->app->make('App\Services\ProductService');
+        $this->productService = $this->app->make(ProductService::class);
     }
 
     public function test_create_product()

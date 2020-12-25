@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Category;
 
-use App\Exceptions\CannotDeleteParentCategoryException;
-use App\Services\CategoryService;
+use App\Exceptions\Category\CannotDeleteParentCategoryException;
+use App\Services\Category\CategoryService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 

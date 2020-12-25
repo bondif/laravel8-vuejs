@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Product;
 
-use App\Exceptions\MaxCategoriesExceededException;
-use App\Services\ProductService;
+use App\Exceptions\Category\MaxCategoriesExceededException;
+use App\Services\Product\ProductService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 

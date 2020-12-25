@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Repository;
+namespace App\Repository\Category;
 
 
-use App\Models\Category;
+use App\Models\Category\Category;
 use Illuminate\Support\Facades\DB;
 
 class CategoryRepository

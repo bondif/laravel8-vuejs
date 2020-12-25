@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Product;
 
 use App\Exceptions\CannotSortWithColumnException;
-use App\Exceptions\MaxCategoriesExceededException;
-use App\Models\Product;
-use App\Repository\ProductRepository;
+use App\Exceptions\Category\MaxCategoriesExceededException;
+use App\Models\Product\Product;
+use App\Repository\Product\ProductRepository;
+use App\Services\FileUploader;
 
 class ProductService
 {

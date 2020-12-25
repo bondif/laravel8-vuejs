@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Category;
 
-use App\Exceptions\CannotDeleteParentCategoryException;
-use App\Models\Category;
-use App\Repository\CategoryRepository;
+use App\Exceptions\Category\CannotDeleteParentCategoryException;
+use App\Models\Category\Category;
+use App\Repository\Category\CategoryRepository;
 
 class CategoryService
 {

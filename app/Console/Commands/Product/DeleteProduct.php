@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Product;
 
-use App\Services\ProductService;
+use App\Services\Product\ProductService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
