@@ -56,9 +56,10 @@ class StoreCategory extends Command
             return 0;
         }
 
-        if ($categoryService->store($name, $parentId)) {
+        try {
+            $categoryService->store($name, $parentId);
             $this->info('The category was created successfully!');
-        } else {
+        } catch (\Exception $exception) {
             $this->error('Something went wrong, please try again!');
         }
 
